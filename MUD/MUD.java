@@ -1,8 +1,8 @@
 /***********************************************************************
- * cs3524.solutions.mud.MUD
+ * MUD.MUD
  ***********************************************************************/
 
-package cs3524.solutions.mud;
+package MUD;
 
 import java.io.FileReader;
 import java.io.BufferedReader;

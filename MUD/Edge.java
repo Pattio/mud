@@ -1,8 +1,8 @@
 /***********************************************************************
- * cs3524.solutions.mud.Edge
+ * MUD.Edge
  ***********************************************************************/
 
-package cs3524.solutions.mud;
+package MUD;
 
 // Represents an path in the MUD (an edge in a graph).
 class Edge

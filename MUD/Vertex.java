@@ -1,8 +1,8 @@
 /***********************************************************************
- * cs3524.solutions.mud.Vertex
+ * MUD.Vertex
  ***********************************************************************/
 
-package cs3524.solutions.mud;
+package MUD;
 
 import java.util.Map;
 import java.util.HashMap;
