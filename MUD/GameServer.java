@@ -9,14 +9,9 @@ import java.rmi.registry.LocateRegistry;
 public class GameServer {
     public static void main(String[] args) {
         
-        if (args.length < 2) {
-            System.err.println("Usage:\njava GameServer <registryport> <serverport>");
-            return;
-        }
-        
         // Parse arguments
-        int registryPort = Integer.parseInt(args[0]);
-        int serverPort = Integer.parseInt(args[1]);
+        int registryPort =  50000;
+        int serverPort =    50001;
         
         // Try to create registry in case it is not created yet.
         try {
