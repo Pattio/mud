@@ -8,7 +8,8 @@ public class GameClient {
     // Private members
     private Scanner scan = new Scanner(System.in);
     private GameServerInterface server;
-    private Player player;
+    private String uniquerPlayerID;
+    private String input;
 
     public static void main(String[] args) {
         GameClient client = new GameClient();
@@ -21,29 +22,49 @@ public class GameClient {
             System.setProperty("java.security.policy", "mud.policy");
             System.setSecurityManager(new SecurityManager());
 
-
+            // Get server object
             String serverURL = "rmi://" + hostname + ":" + port + "/GameServer";
             System.out.println("Retrieving server info from: " + serverURL);
             client.server = (GameServerInterface) Naming.lookup(serverURL);
-            client.promptLogin();
+
+            // Continue while loop till user logins
+            while(!client.login()) {}
+
+            // Start game loop
+            while(true) {
+                client.input = client.scan.nextLine();
+                try {
+                    System.out.println(client.server.parseInput(client.uniquerPlayerID, client.input));
+                } catch(Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
 
         } catch(Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public void promptLogin() {
-        System.out.println("-----------LOGIN-----------");
+    public boolean login() {
         System.out.print("Enter username: ");
-        String username = scan.next();
+        String username = scan.nextLine();
         try {
-            player = server.connect(username);
+            uniquerPlayerID = server.connect(username);
         } catch(Exception ex) {
-            System.out.println("Server error");
+            System.out.println("SERVER ERROR, TRY AGAIN...");
+            return false;
         }
 
-        System.out.print("\033[H\033[2J");  
-        System.out.flush();  
-        player.greet();
+        if(uniquerPlayerID == "-1") {
+            System.out.println("Incorrect username/password try again");
+            return false;
+        }
+
+        System.out.println("Successfully logged in: ");
+        System.out.println("If you want to see all available commands type help");
+
+        //server.displayInfo()
+        return true;
     }
+
 }

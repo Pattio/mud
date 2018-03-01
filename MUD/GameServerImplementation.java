@@ -12,11 +12,28 @@ public class GameServerImplementation implements GameServerInterface {
         System.out.println("Game Server initialized");
     }
 
-    public Player connect(String name) throws RemoteException {
+    public String connect(String name) throws RemoteException {
         System.out.println("Player " + name + " connected to the server");
-        Player player = new Player(_players.size(), name, "A", Collections.<String>emptyList());
+        String playerID = Integer.toString(_players.size());
+        Player player = new Player(playerID, name, "A", Collections.<String>emptyList());
         _players.add(player);
-        return player;
+        return player.getID();
+    }
+
+    // private void printAvailableCommands() {
+    //     System.out.println("--------------------------");
+    //     System.out.println("Available command list");
+    //     System.out.println("--------------------------\n");
+    //     System.out.println("move [ n | e | s | w] - moves player to specified location (n - north, e - east, s - south, w - west");
+    // }
+
+    public String parseInput(String clientID, String clientInput) throws RemoteException {
+        System.out.println("Client " + clientID + " entered input " + clientInput);
+        return "SUCCESS";
+    }
+
+    public enum Direction {
+        North, East, South, West,
     }
 
 }
