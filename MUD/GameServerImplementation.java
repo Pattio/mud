@@ -4,6 +4,8 @@ import java.rmi.*;
 import java.rmi.server.*;
 import java.util.*;
 
+import MUD.Entities.*;
+
 public class GameServerImplementation implements GameServerInterface {
     private MUD _mud = new MUD("Resources/edges", "Resources/messages", "Resources/things");
     private List<Player> _players = new Vector<Player>();
@@ -20,7 +22,7 @@ public class GameServerImplementation implements GameServerInterface {
         String playerID = Integer.toString(_players.size());
         Player player = new Player(playerID, name, "A", Collections.<String>emptyList());
         _players.add(player);
-        _mud.addThing(player.getLocation(), player.getID());
+        _mud.addThing(player.getLocation(), player);
         return player.getID();
     }
 
@@ -37,14 +39,14 @@ public class GameServerImplementation implements GameServerInterface {
                 return Command.available();
             case MOVE:
                 Player player = getPlayer(clientID);
-                String newLocation = _mud.moveThing(player.getLocation(), Command.getMetadata(), clientID);
+                String newLocation = _mud.moveThing(player.getLocation(), Command.getMetadata(), player);
                 
                 if (newLocation.equals(player.getLocation())) {
                     return "You tried to move to " + Command.getMetadata() + " however there is no path leading to there";
                 } else {
                     player.setLocation(newLocation);
                     return "Now you are at: " + newLocation 
-                        + "\n " + _mud.locationInfo(newLocation);
+                        + "\n " + _mud.locationInfo(newLocation, player);
                 }
             case UNKNOWN:
                 System.out.println("Command is unknown");

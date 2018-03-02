@@ -57,6 +57,7 @@ public class GameClient {
             uniquerPlayerID = server.connect(username);
             Terminal.clear();
         } catch(Exception ex) {
+            System.out.println(ex);
             System.out.println("SERVER ERROR, TRY AGAIN...");
             return false;
         }

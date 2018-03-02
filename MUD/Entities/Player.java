@@ -1,9 +1,9 @@
-package MUD;
+package MUD.Entities;
 
 import java.util.List;
 import java.io.Serializable;
 
-public class Player implements Serializable {
+public class Player implements Entity {
     public Player(String uniqueID, String name, String location, List<String> items) {
         _uniqueID = uniqueID;
         _name = name;
@@ -26,6 +26,10 @@ public class Player implements Serializable {
 
     public String getLocation() {
         return _location;
+    }
+
+    public String getName() {
+        return _name;
     }
 
     // Private members

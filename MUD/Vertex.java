@@ -4,6 +4,8 @@
 
 package MUD;
 
+import MUD.Entities.*;
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -18,35 +20,35 @@ class Vertex
     public Map<String,Edge> _routes; // Association between direction
 				     // (e.g. "north") and a path
 				     // (Edge)
-    public List<String> _things;     // The things (e.g. players) at
+    public List<Entity> _things;     // The things (e.g. players) at
 				     // this location
 
     public Vertex( String nm )
     {
 	_name = nm; 
 	_routes = new HashMap<String,Edge>(); // Not synchronised
-	_things = new Vector<String>();       // Synchronised
+	   _things = new Vector<Entity>();
     }
 
-    public String toString()
+    public String toString(Entity entity)
     {
-	String summary = "\n";
-	summary += _msg + "\n";
-	Iterator iter = _routes.keySet().iterator();
-	String direction;
-	while (iter.hasNext()) {
-	    direction = (String)iter.next();
-	    summary += "To the " + direction + " there is " + ((Edge)_routes.get( direction ))._view + "\n";
-	}
-	iter = _things.iterator();
-	if (iter.hasNext()) {
-	    summary += "You can see: ";
-	    do {
-		summary += iter.next() + " ";
-	    } while (iter.hasNext());
-	}
-	summary += "\n\n";
-	return summary;
+	   String summary = "\n" + _msg + "\n";
+
+	   Iterator iter = _routes.keySet().iterator();
+	   String direction;
+	   while (iter.hasNext()) {
+	       direction = (String)iter.next();
+	       summary += "To the " + direction + " there is " + ((Edge)_routes.get( direction ))._view + "\n";
+	   }
+
+        if (_things.size() > 1) summary += "You can see: ";
+        for(Entity _entity : _things) {
+            if(_entity == entity) continue;
+            summary += _entity.getName() + " ";
+        }
+
+	   summary += "\n\n";
+	   return summary;
     }
 }
 

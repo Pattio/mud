@@ -4,6 +4,8 @@
 
 package MUD;
 
+import MUD.Entities.*;
+
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -48,11 +50,10 @@ public class MUD
     /**
      * Create a new thing at a location.
      */
-    private void createThing( String loc, 
-			      String thing )
+    private void createThing(String loc, Entity entity)
     {
-	Vertex v = getOrCreateVertex( loc );
-	v._things.add( thing );
+	   Vertex v = getOrCreateVertex(loc);
+	   v._things.add(entity);
     }
 
     /**
@@ -176,7 +177,8 @@ public class MUD
 		}
 		String loc = st.nextToken();
 		while (st.hasMoreTokens()) {
-		    addThing( loc, st.nextToken()); 
+            Item item = new Item(st.nextToken());
+		    addThing( loc, item); 
                 }
 	    }
 	}
@@ -224,11 +226,10 @@ public class MUD
     }
 
     /**
-     * A method to provide a string describing a particular location.
+     * Describe location for specific entity
      */
-    public String locationInfo( String loc )
-    {
-	return getVertex( loc ).toString();
+    public String locationInfo(String loc, Entity entity) {
+	   return getVertex(loc).toString(entity);
     }
 
     /**
@@ -242,11 +243,9 @@ public class MUD
     /**
      * Add a thing to a location; used to enable us to add new users.
      */
-    public void addThing( String loc,
-			  String thing )
-    {
-	Vertex v = getVertex( loc );
-	v._things.add( thing );
+    public void addThing(String loc, Entity entity) {
+	   Vertex v = getVertex(loc);
+	   v._things.add(entity);
     }
 
     /**
@@ -264,15 +263,15 @@ public class MUD
      * is a thing). Checks that there is a route to travel on. Returns
      * the location moved to.
      */
-    public String moveThing( String loc, String dir, String thing )
-    {
-	Vertex v = getVertex( loc );
-	Edge e = v._routes.get( dir );
-	if (e == null)   // if there is no route in that direction
-	    return loc;  // no move is made; return current location.
-	v._things.remove( thing );
-	e._dest._things.add( thing );
-	return e._dest._name;
+    public String moveThing(String loc, String dir, Entity thing) {
+	   Vertex v = getVertex(loc);
+	   Edge e = v._routes.get(dir);
+    	if (e == null)   // if there is no route in that direction
+    	    return loc;  // no move is made; return current location.
+	   
+       v._things.remove(thing);
+	   e._dest._things.add(thing);
+	   return e._dest._name;
     }
 
     /**
