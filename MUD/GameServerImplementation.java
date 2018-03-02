@@ -20,7 +20,7 @@ public class GameServerImplementation implements GameServerInterface {
     public String connect(String name) throws RemoteException {
         System.out.println("Player " + name + " connected to the server");
         String playerID = Integer.toString(_players.size());
-        Player player = new Player(playerID, name, "A", Collections.<String>emptyList());
+        Player player = new Player(playerID, name, "A", Collections.<Item>emptyList());
         _players.add(player);
         _mud.addThing(player.getLocation(), player);
         return player.getID();
@@ -51,6 +51,12 @@ public class GameServerImplementation implements GameServerInterface {
                 } else {
                     player.setLocation(newLocation);
                     return _mud.locationInfo(newLocation, player);
+                }
+            case PICK:
+                if(_mud.pick(player.getLocation(), Command.getMetadata()) != null) {
+                    return "You successfully picked " + Command.getMetadata() +  "!\n";
+                } else {
+                    return "Item with name: " + Command.getMetadata() + " doesn't exist";
                 }
             case UNKNOWN:
                 System.out.println("Command is unknown");

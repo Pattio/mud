@@ -4,7 +4,7 @@ import java.util.List;
 import java.io.Serializable;
 
 public class Player implements Entity {
-    public Player(String uniqueID, String name, String location, List<String> items) {
+    public Player(String uniqueID, String name, String location, List<Item> items) {
         _uniqueID = uniqueID;
         _name = name;
         _location = location;
@@ -36,5 +36,5 @@ public class Player implements Entity {
     private String _uniqueID;
     private String _name;
     private String _location;
-    private List<String> _items; 
+    private List<Item> _items; 
 }

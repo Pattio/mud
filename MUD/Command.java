@@ -2,7 +2,7 @@ package MUD;
 
 public enum Command {
     // Available commands
-    UNKNOWN, MOVE, HELP, SEE;
+    UNKNOWN, MOVE, HELP, SEE, PICK;
 
     // Function to transfer user input to command
     public static Command evaluate(String command) {
@@ -33,6 +33,9 @@ public enum Command {
             + Terminal.getLine()
             + "\n see"
             + "\tShow everything around you (items, players, paths)"
+            + Terminal.getLine()
+            + "\n pick (item-name)"
+            + "\tPick item with specified name if it exists at current location"
             + Terminal.getLine();
     }
 
@@ -51,6 +54,11 @@ public enum Command {
             _metadata = words[1];
             return MOVE; 
         }
+
+        if (words[0].equals("pick")) {
+            _metadata = words[1];
+            return PICK;
+        } 
 
         return UNKNOWN;
     }

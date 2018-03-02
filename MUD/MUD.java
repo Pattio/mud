@@ -287,4 +287,11 @@ public class MUD
 	MUD m = new MUD( args[0], args[1], args[2] );
 	System.out.println( m.toString() );
     }
+
+
+
+    public Item pick(String location, String itemName) {
+        Vertex vertex = getVertex(location);
+        return vertex.pickItem(itemName);
+    }
 }

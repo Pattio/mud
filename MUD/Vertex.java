@@ -50,5 +50,17 @@ class Vertex
 	   summary += "\n" + Terminal.getLine();
 	   return summary;
     }
+
+    // Check all the entities at the location and if it's of type Item
+    // remove it from location and return casted object
+    public Item pickItem(String itemName) {
+        for(Entity entity : _things) {
+            if(entity instanceof Item && entity.getName().equals(itemName)) {
+                _things.remove(entity);
+                return (Item) entity;
+            }
+        }
+        return null;
+    }
 }
 
