@@ -32,7 +32,7 @@ class Vertex
 
     public String toString(Entity entity)
     {
-	   String summary = "\n" + _msg + "\n";
+	   String summary = _msg + "\n";
 
 	   Iterator iter = _routes.keySet().iterator();
 	   String direction;
@@ -41,13 +41,13 @@ class Vertex
 	       summary += "To the " + direction + " there is " + ((Edge)_routes.get( direction ))._view + "\n";
 	   }
 
-        if (_things.size() > 1) summary += "You can see: ";
+        if (_things.size() > 1) summary += "\nYou can see: ";
         for(Entity _entity : _things) {
             if(_entity == entity) continue;
             summary += _entity.getName() + " ";
         }
 
-	   summary += "\n\n";
+	   summary += "\n" + Terminal.getLine();
 	   return summary;
     }
 }

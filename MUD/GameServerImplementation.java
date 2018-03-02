@@ -36,11 +36,14 @@ public class GameServerImplementation implements GameServerInterface {
     }
 
     public String parseInput(String clientID, String clientInput) throws RemoteException {
+        Player player = getPlayer(clientID);
+        
         switch(Command.evaluate(clientInput)) {
             case HELP:
                 return Command.available();
+            case SEE:
+                return _mud.locationInfo(player.getLocation(), player);
             case MOVE:
-                Player player = getPlayer(clientID);
                 String newLocation = _mud.moveThing(player.getLocation(), Command.getMetadata(), player);
                 
                 if (newLocation.equals(player.getLocation())) {
