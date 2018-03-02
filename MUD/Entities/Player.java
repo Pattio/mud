@@ -1,14 +1,17 @@
 package MUD.Entities;
 
-import java.util.List;
 import java.io.Serializable;
+import java.util.*;
 
 public class Player implements Entity {
+    // Public members 
+    public List<Item> items = new Vector<Item>();
+
     public Player(String uniqueID, String name, String location, List<Item> items) {
         _uniqueID = uniqueID;
         _name = name;
         _location = location;
-        _items = items;
+        items = items;
     }
 
     public void greet() {
@@ -36,5 +39,4 @@ public class Player implements Entity {
     private String _uniqueID;
     private String _name;
     private String _location;
-    private List<Item> _items; 
 }

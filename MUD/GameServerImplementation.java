@@ -45,7 +45,6 @@ public class GameServerImplementation implements GameServerInterface {
                 return _mud.locationInfo(player.getLocation(), player);
             case MOVE:
                 String newLocation = _mud.moveThing(player.getLocation(), Command.getMetadata(), player);
-                
                 if (newLocation.equals(player.getLocation())) {
                     return "You tried to move to " + Command.getMetadata() + " however there is no path leading to there";
                 } else {
@@ -53,11 +52,23 @@ public class GameServerImplementation implements GameServerInterface {
                     return _mud.locationInfo(newLocation, player);
                 }
             case PICK:
-                if(_mud.pick(player.getLocation(), Command.getMetadata()) != null) {
+                Item item = _mud.pick(player.getLocation(), Command.getMetadata());
+                if(item != null) {
+                    player.items.add(item);
                     return "You successfully picked " + Command.getMetadata() +  "!\n";
                 } else {
                     return "Item with name: " + Command.getMetadata() + " doesn't exist";
                 }
+            case INVENTORY:
+                if (player.items.isEmpty()) {
+                    return "You don't have any items in your invetory";
+                } 
+
+                String items = "Here is your inventory list: \n";
+                for(Item _item : player.items) {
+                    items += _item.getName() + " ";
+                }
+                return items;
             case UNKNOWN:
                 System.out.println("Command is unknown");
                 break;

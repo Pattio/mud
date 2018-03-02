@@ -2,7 +2,7 @@ package MUD;
 
 public enum Command {
     // Available commands
-    UNKNOWN, MOVE, HELP, SEE, PICK;
+    UNKNOWN, MOVE, HELP, SEE, PICK, INVENTORY;
 
     // Function to transfer user input to command
     public static Command evaluate(String command) {
@@ -31,11 +31,14 @@ public enum Command {
             + "\nmove [ north | east | south | west]\n"
             + "\tMoves player to specified location\n"
             + Terminal.getLine()
-            + "\n see"
-            + "\tShow everything around you (items, players, paths)"
+            + "\n see\n"
+            + "\tShow everything around you (items, players, paths)\n"
             + Terminal.getLine()
-            + "\n pick (item-name)"
-            + "\tPick item with specified name if it exists at current location"
+            + "\n pick (item-name)\n"
+            + "\tPick item with specified name if it exists at current location\n"
+            + Terminal.getLine()
+            + "\n inventory\n"
+            + "\tDisplays items in your inventory\n"
             + Terminal.getLine();
     }
 
@@ -46,6 +49,7 @@ public enum Command {
     private static Command oneWordCommands(String[] words) {
         if (words[0].equals("help")) return HELP;
         if (words[0].equals("see")) return SEE;
+        if (words[0].equals("inventory")) return INVENTORY;
         return UNKNOWN;
     }
 
