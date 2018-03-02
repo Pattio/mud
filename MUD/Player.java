@@ -20,6 +20,14 @@ public class Player implements Serializable {
         return _uniqueID;
     }
 
+    public void setLocation(String location) {
+        _location = location;
+    }
+
+    public String getLocation() {
+        return _location;
+    }
+
     // Private members
     private String _uniqueID;
     private String _name;

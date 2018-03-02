@@ -20,6 +20,7 @@ public class GameServerImplementation implements GameServerInterface {
         String playerID = Integer.toString(_players.size());
         Player player = new Player(playerID, name, "A", Collections.<String>emptyList());
         _players.add(player);
+        _mud.addThing(player.getLocation(), player.getID());
         return player.getID();
     }
 
@@ -35,12 +36,30 @@ public class GameServerImplementation implements GameServerInterface {
             case HELP:
                 return Command.available();
             case MOVE:
-                System.out.println("Client wants to move to " + Command.getMetadata());
-                break;
+                Player player = getPlayer(clientID);
+                String newLocation = _mud.moveThing(player.getLocation(), Command.getMetadata(), clientID);
+                
+                if (newLocation.equals(player.getLocation())) {
+                    return "You tried to move to " + Command.getMetadata() + " however there is no path leading to there";
+                } else {
+                    player.setLocation(newLocation);
+                    return "Now you are at: " + newLocation 
+                        + "\n " + _mud.locationInfo(newLocation);
+                }
             case UNKNOWN:
                 System.out.println("Command is unknown");
                 break;
         }
         return "SUCCESS";
+    }
+
+
+    private Player getPlayer(String id) {
+        for(Player player : _players) {
+            if(player.getID().equals(id)) {
+                return player;
+            }
+        }
+        return null;
     }
 }
