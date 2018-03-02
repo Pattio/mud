@@ -28,12 +28,14 @@ public class GameServerImplementation implements GameServerInterface {
     // }
 
     public String parseInput(String clientID, String clientInput) throws RemoteException {
-        System.out.println("Client " + clientID + " entered input " + clientInput);
+        switch(Command.evaluate(clientInput)) {
+            case MOVE:
+                System.out.println("Client wants to move to " + Command.getMetadata());
+                break;
+            case UNKNOWN:
+                System.out.println("Command is unknown");
+                break;
+        }
         return "SUCCESS";
     }
-
-    public enum Direction {
-        North, East, South, West,
-    }
-
 }
