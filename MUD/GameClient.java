@@ -7,12 +7,12 @@ public class GameClient {
 
     // Private members
     private Scanner scan = new Scanner(System.in);
+    private static GameClient client = new GameClient();
     private GameServerInterface server;
     private String uniquerPlayerID;
     private String input;
 
     public static void main(String[] args) {
-        GameClient client = new GameClient();
 
         try {
             // Gather server address information
@@ -30,10 +30,13 @@ public class GameClient {
             // Continue while loop till user logins
             while(!client.login()) {}
 
+            client.showServerInformation();
+
             // Start game loop
             while(true) {
                 client.input = client.scan.nextLine();
                 try {
+                    Terminal.clear();
                     System.out.println(client.server.parseInput(client.uniquerPlayerID, client.input));
                 } catch(Exception ex) {
                     ex.printStackTrace();
@@ -46,10 +49,13 @@ public class GameClient {
     }
 
     public boolean login() {
+        Terminal.clear();
+        Terminal.header("LOGIN");
         System.out.print("Enter username: ");
         String username = scan.nextLine();
         try {
             uniquerPlayerID = server.connect(username);
+            Terminal.clear();
         } catch(Exception ex) {
             System.out.println("SERVER ERROR, TRY AGAIN...");
             return false;
@@ -59,12 +65,14 @@ public class GameClient {
             System.out.println("Incorrect username/password try again");
             return false;
         }
-
-        System.out.println("Successfully logged in: ");
-        System.out.println("If you want to see all available commands type help");
-
-        //server.displayInfo()
         return true;
+    }
+
+    private void showServerInformation() {
+        Terminal.header("SERVER INFORMATION");
+        try {
+            System.out.println(server.getInformation(client.uniquerPlayerID));
+        } catch(Exception ex) {}
     }
 
 }

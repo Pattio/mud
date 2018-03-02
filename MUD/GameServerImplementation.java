@@ -7,9 +7,12 @@ import java.util.*;
 public class GameServerImplementation implements GameServerInterface {
     private MUD _mud = new MUD("Resources/edges", "Resources/messages", "Resources/things");
     private List<Player> _players = new Vector<Player>();
+    private String _name;
 
-    public GameServerImplementation() throws RemoteException { 
-        System.out.println("Game Server initialized");
+    public GameServerImplementation(String name) throws RemoteException {
+        _name = name;
+        Terminal.clear();
+        Terminal.header("Game Server initialized");
     }
 
     public String connect(String name) throws RemoteException {
@@ -20,15 +23,17 @@ public class GameServerImplementation implements GameServerInterface {
         return player.getID();
     }
 
-    // private void printAvailableCommands() {
-    //     System.out.println("--------------------------");
-    //     System.out.println("Available command list");
-    //     System.out.println("--------------------------\n");
-    //     System.out.println("move [ n | e | s | w] - moves player to specified location (n - north, e - east, s - south, w - west");
-    // }
+    public String getInformation(String clientID) throws RemoteException {
+        return "Server name: " + _name + "\n"
+            + "Players online: " + _players.size() + "\n"
+            + "To see all available commands type help \n"
+            + Terminal.getLine();
+    }
 
     public String parseInput(String clientID, String clientInput) throws RemoteException {
         switch(Command.evaluate(clientInput)) {
+            case HELP:
+                return Command.available();
             case MOVE:
                 System.out.println("Client wants to move to " + Command.getMetadata());
                 break;
