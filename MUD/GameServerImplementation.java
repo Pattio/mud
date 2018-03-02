@@ -27,10 +27,12 @@ public class GameServerImplementation implements GameServerInterface {
     }
 
     public String getInformation(String clientID) throws RemoteException {
+        Player player = getPlayer(clientID);
         return "Server name: " + _name + "\n"
             + "Players online: " + _players.size() + "\n"
             + "To see all available commands type help \n"
-            + Terminal.getLine();
+            + Terminal.getLine() + "\n"
+            + _mud.locationInfo(player.getLocation(), player);
     }
 
     public String parseInput(String clientID, String clientInput) throws RemoteException {
@@ -45,8 +47,7 @@ public class GameServerImplementation implements GameServerInterface {
                     return "You tried to move to " + Command.getMetadata() + " however there is no path leading to there";
                 } else {
                     player.setLocation(newLocation);
-                    return "Now you are at: " + newLocation 
-                        + "\n " + _mud.locationInfo(newLocation, player);
+                    return _mud.locationInfo(newLocation, player);
                 }
             case UNKNOWN:
                 System.out.println("Command is unknown");
