@@ -7,32 +7,69 @@ import java.util.*;
 import MUD.Entities.*;
 
 public class GameServerImplementation implements GameServerInterface {
-    private MUD _mud = new MUD("Resources/edges", "Resources/messages", "Resources/things");
+    private HashMap<String, MUD> _muds = new HashMap<String, MUD>();
     private List<Player> _players = new Vector<Player>();
-    private String _name;
+    private int _maxServers, _maxPlayers;
 
-    public GameServerImplementation(String name) throws RemoteException {
-        _name = name;
+    public GameServerImplementation(int maxServers, int maxPlayers) throws RemoteException {
+        // Initialize limits
+        _maxServers = maxServers;
+        _maxPlayers = maxPlayers;
+        
+        // Create multiple muds
+        _muds.put("Cobra", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
+        _muds.put("Beyond", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
+
+        // Inform that server is launched
         Terminal.clear();
         Terminal.header("Game Server initialized");
     }
 
-    public String connect(String name) throws RemoteException {
-        System.out.println("Player " + name + " connected to the server");
+    public String connect(String username, String server) throws RemoteException {
+        // Check if server exists
+        MUD mud = _muds.get(server);
+        if (mud == null) return "-1";
+        
+        System.out.println("Player " + username + " connected to the server");
         String playerID = Integer.toString(_players.size());
-        Player player = new Player(playerID, name, "A", Collections.<Item>emptyList());
+        Player player = new Player(playerID, username, server, mud.startLocation(), Collections.<Item>emptyList());
         _players.add(player);
-        _mud.addThing(player.getLocation(), player);
+        mud.addThing(player.getLocation(), player);
         return player.getID();
+    }
+
+    public String getList() throws RemoteException {
+        String serverNames = "";
+        for (String serverName : _muds.keySet()) {
+            serverNames += serverName + "\n";
+        }
+        return serverNames;
+    }
+
+    public boolean exists(String server) throws RemoteException {
+        return (_muds.get(server) != null);
+    }
+
+    public boolean hasSpace(String server) throws RemoteException {
+        return _players.size() < _maxPlayers;
+    }
+
+    public boolean create(String server) throws RemoteException {
+        // If there is max number of servers is reached return false
+        if (_muds.size() >= _maxServers) 
+            return false;
+        // Otherwise create new server
+        _muds.put(server, new MUD("Resources/edges", "Resources/messages", "Resources/things"));
+        return true;
     }
 
     public String getInformation(String clientID) throws RemoteException {
         Player player = getPlayer(clientID);
-        return "Server name: " + _name + "\n"
+        return "Server name: " + player.getServerName() + "\n"
             + "Players online: " + _players.size() + "\n"
             + "To see all available commands type help \n"
             + Terminal.getLine() + "\n"
-            + _mud.locationInfo(player.getLocation(), player);
+            + getMUD(player).locationInfo(player.getLocation(), player);
     }
 
     public String parseInput(String clientID, String clientInput) throws RemoteException {
@@ -42,17 +79,17 @@ public class GameServerImplementation implements GameServerInterface {
             case HELP:
                 return Command.available();
             case SEE:
-                return _mud.locationInfo(player.getLocation(), player);
+                return getMUD(player).locationInfo(player.getLocation(), player);
             case MOVE:
-                String newLocation = _mud.moveThing(player.getLocation(), Command.getMetadata(), player);
+                String newLocation = getMUD(player).moveThing(player.getLocation(), Command.getMetadata(), player);
                 if (newLocation.equals(player.getLocation())) {
                     return "You tried to move to " + Command.getMetadata() + " however there is no path leading to there";
                 } else {
                     player.setLocation(newLocation);
-                    return _mud.locationInfo(newLocation, player);
+                    return getMUD(player).locationInfo(newLocation, player);
                 }
             case PICK:
-                Item item = _mud.pick(player.getLocation(), Command.getMetadata());
+                Item item = getMUD(player).pick(player.getLocation(), Command.getMetadata());
                 if(item != null) {
                     player.items.add(item);
                     return "You successfully picked " + Command.getMetadata() +  "!\n";
@@ -84,5 +121,9 @@ public class GameServerImplementation implements GameServerInterface {
             }
         }
         return null;
+    }
+
+    private MUD getMUD(Player player) {
+        return _muds.get(player.getServerName());
     }
 }
