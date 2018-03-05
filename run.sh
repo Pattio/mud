@@ -1,3 +1,3 @@
 #!/bin/bash  
 make
-java MUD.GameServer
+java MUD.Server.GameServer

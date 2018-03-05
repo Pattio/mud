@@ -1,4 +1,6 @@
-package MUD;
+package MUD.Server;
+
+import MUD.Common.Terminal;
 
 public enum Command {
     // Available commands

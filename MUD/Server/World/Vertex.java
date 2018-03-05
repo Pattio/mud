@@ -2,11 +2,11 @@
  * MUD.Vertex
  ***********************************************************************/
 
-package MUD;
+package MUD.Server.World;
 
-import MUD.Entities.*;
+import MUD.Common.Terminal;
+import MUD.Server.Entities.*;
 import java.io.Serializable;
-
 import java.util.*;
 
 // Represents a location in the MUD (a vertex in the graph).

@@ -2,7 +2,7 @@
  * MUD.Edge
  ***********************************************************************/
 
-package MUD;
+package MUD.Server.World;
 
 import java.io.Serializable;
 

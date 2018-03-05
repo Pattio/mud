@@ -1,22 +1,24 @@
-package MUD;
+package MUD.Server.PersistentStorage;
 
-import MUD.Entities.*;
+import MUD.Server.Entities.*;
 import java.util.*;
 import java.io.*;
 
 public class AccountManager {
-    private PersistentManager persistentManager = new PersistentManager();
+    private PersistentStorage persistentStorage = new PersistentStorage();
     private List<Player> accounts = new Vector<Player>();
     private String accountsURL = "Storage/accounts";
     
     public AccountManager() {
-        // Load account from file
-        accounts = persistentManager.<List<Player>>load(accountsURL);
+        // Load account from file if it exists
+        if (persistentStorage.<List<Player>>load(accountsURL) != null) {
+            accounts = persistentStorage.<List<Player>>load(accountsURL);
+        }
     }
 
     // Save all account to file
     public void save() {
-        persistentManager.<List<Player>>save(accountsURL, accounts);
+        persistentStorage.<List<Player>>save(accountsURL, accounts);
     }
 
     // Check for user account in specific MUD server

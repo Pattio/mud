@@ -1,4 +1,4 @@
-package MUD.Entities;
+package MUD.Server.Entities;
 
 import java.io.Serializable;
 

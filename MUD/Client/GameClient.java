@@ -1,5 +1,6 @@
-package MUD;
+package MUD.Client;
 
+import MUD.Common.*;
 import java.rmi.*;
 import java.util.Scanner;
 

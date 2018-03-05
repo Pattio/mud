@@ -1,10 +1,11 @@
-package MUD;
+package MUD.Server;
+
+import MUD.Common.GameServerInterface;
 
 import java.rmi.*;
 import java.rmi.registry.*;
 import java.rmi.server.UnicastRemoteObject;
 import java.net.InetAddress;
-import java.rmi.registry.LocateRegistry;
 
 public class GameServer {
     public static void main(String[] args) {

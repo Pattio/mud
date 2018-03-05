@@ -1,13 +1,15 @@
-package MUD;
+package MUD.Server.PersistentStorage;
 
-import MUD.Entities.*;
+import MUD.Common.Terminal;
+import MUD.Server.World.*;
+import MUD.Server.Entities.*;
 import java.util.*;
 import java.io.*;
 
 public class MUDManager {
     private HashMap<String, MUD> muds = new HashMap<String, MUD>();
     private String mudsURL = "Storage/muds";
-    private PersistentManager persistentManager = new PersistentManager();
+    private PersistentStorage persistentStorage = new PersistentStorage();
     private int _maxServers;
     
     public MUDManager(int maxServers) {
@@ -16,8 +18,8 @@ public class MUDManager {
         muds.put("n", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
         muds.put("Beyond", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
         // If server are already create load them instead
-        if (persistentManager.<HashMap<String, MUD>>load(mudsURL) != null) {
-            muds = persistentManager.<HashMap<String, MUD>>load(mudsURL);
+        if (persistentStorage.<HashMap<String, MUD>>load(mudsURL) != null) {
+            muds = persistentStorage.<HashMap<String, MUD>>load(mudsURL);
         }
     }
 
@@ -53,6 +55,6 @@ public class MUDManager {
 
     // Save all muds to file
     public void save() {
-        persistentManager.<HashMap<String, MUD>>save(mudsURL, muds);
+        persistentStorage.<HashMap<String, MUD>>save(mudsURL, muds);
     }
 }

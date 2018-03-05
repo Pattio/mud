@@ -1,10 +1,13 @@
-package MUD;
+package MUD.Server;
 
 import java.rmi.*;
 import java.rmi.server.*;
 import java.util.*;
 
-import MUD.Entities.*;
+import MUD.Common.*;
+import MUD.Server.World.*;
+import MUD.Server.Entities.*;
+import MUD.Server.PersistentStorage.*;
 
 public class GameServerImplementation implements GameServerInterface {
     private List<Player> _players = new Vector<Player>();

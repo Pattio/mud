@@ -2,9 +2,9 @@
  * MUD.MUD
  ***********************************************************************/
 
-package MUD;
+package MUD.Server.World;
 
-import MUD.Entities.*;
+import MUD.Server.Entities.*;
 import java.io.*;
 import java.util.*;
 

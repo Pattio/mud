@@ -1,10 +1,9 @@
-package MUD;
+package MUD.Server.PersistentStorage;
 
-import MUD.Entities.*;
 import java.util.*;
 import java.io.*;
 
-public class PersistentManager {
+public class PersistentStorage {
     // Load generic serialized type from file, call this only if know
     // return type of specified file. Warning is supressed because of 
     // asumption that caller knows return type

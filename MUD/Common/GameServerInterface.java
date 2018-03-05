@@ -1,4 +1,4 @@
-package MUD;
+package MUD.Common;
 
 import java.rmi.*;
 
