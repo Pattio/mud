@@ -251,11 +251,9 @@ public class MUD
     /**
      * Remove a thing from a location.
      */
-    public void delThing( String loc, 
-			  String thing )
-    {
-	Vertex v = getVertex( loc );
-	v._things.remove( thing );
+    public void delThing(String loc, Entity thing) {
+	   Vertex v = getVertex(loc);
+	   v._things.remove(thing);
     }
 
     /**

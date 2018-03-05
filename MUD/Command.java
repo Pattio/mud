@@ -2,7 +2,7 @@ package MUD;
 
 public enum Command {
     // Available commands
-    UNKNOWN, MOVE, HELP, SEE, PICK, INVENTORY;
+    UNKNOWN, MOVE, HELP, SEE, PICK, INVENTORY, QUIT;
 
     // Function to transfer user input to command
     public static Command evaluate(String command) {
@@ -39,6 +39,9 @@ public enum Command {
             + Terminal.getLine()
             + "\n inventory\n"
             + "\tDisplays items in your inventory\n"
+            + Terminal.getLine()
+            + "\n quit\n"
+            + "\tQuit game\n"
             + Terminal.getLine();
     }
 
@@ -50,6 +53,7 @@ public enum Command {
         if (words[0].equals("help")) return HELP;
         if (words[0].equals("see")) return SEE;
         if (words[0].equals("inventory")) return INVENTORY;
+        if (words[0].equals("quit")) return QUIT;
         return UNKNOWN;
     }
 

@@ -6,15 +6,13 @@ import java.util.Scanner;
 public class GameClient {
 
     // Private members
-    private Scanner scan = new Scanner(System.in);
     private static GameClient client = new GameClient();
+    private Scanner scan = new Scanner(System.in);
     private GameServerInterface server;
-    private String uniquerPlayerID;
-    private String input;
-    private String serverName;
+    private String uniquerPlayerID, serverName;
+    private String input, serverResponse;
 
     public static void main(String[] args) {
-
         try {
             // Gather server address information
             String hostname = "macbook";
@@ -28,6 +26,8 @@ public class GameClient {
             System.out.println("Retrieving server info from: " + serverURL);
             client.server = (GameServerInterface) Naming.lookup(serverURL);
 
+            // Create new thread to handle exit
+            client.addShutdownHook();
             // Wait for user to either select or create new a server
             while (!client.welcome()) {}
             // Wait for user to login to server
@@ -39,8 +39,16 @@ public class GameClient {
             while(true) {
                 client.input = client.scan.nextLine();
                 try {
+                    // Get server response
                     Terminal.clear();
-                    System.out.println(client.server.parseInput(client.uniquerPlayerID, client.input));
+                    client.serverResponse = client.server.parseInput(client.uniquerPlayerID, client.input);
+                    // If server issues quit command, quit the client
+                    if (client.serverResponse.equals("QUIT")) {
+                        client.uniquerPlayerID = "-1";
+                        break;
+                    }
+                    // Otherwise print server response
+                    System.out.println(client.serverResponse);
                 } catch(Exception ex) {
                     ex.printStackTrace();
                 }
@@ -58,38 +66,39 @@ public class GameClient {
         System.out.println("If you want to create new server, write create (servername)");
         Terminal.header("SERVERS");
         try {
+            // Get and print current servers list
             String serverList = server.getList();
             System.out.println(serverList);
-
+            // Get user input, must be 2 words otherwise return false
             String[] input = client.scan.nextLine().split("\\s");
             if (input.length != 2) {
                 System.out.println("You passed wrong number of arguments");
                 return false;
             }
-
+            // Check if user wants to login to existing server
             if (input[0].equals("login")) {
                 // Check if server exists
                 if (!server.exists(input[1])) {
                     System.out.println("Server does not exists");
                     return false;
                 }
-
                 // Check if there is space on the server 
                 if (!server.hasSpace(input[1])) {
                     System.out.println("Server is full");
                     return false;
                 }
-
+                // If checks passed save server name
                 serverName = input[1];
                 return true;
             }
-
+            // Check if user wants to create new server
             if (input[0].equals("create")) {
-                // try to create new server
+                // Try to create new server
                 if (!server.create(input[1])) {
                     System.out.println("Could not create new server, max number of servers reached");
                     return false;
                 }
+                // If main server return true, save server name
                 serverName = input[1];
                 return true;
             }
@@ -125,6 +134,18 @@ public class GameClient {
         try {
             System.out.println(server.getInformation(client.uniquerPlayerID));
         } catch(Exception ex) {}
+    }
+
+    private void addShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            public void run() {
+                if (uniquerPlayerID == "-1") return;
+                try {
+                    server.disconnect(uniquerPlayerID);
+                    System.out.println("Disconnected from the server");
+                } catch(Exception ex) { }
+            }
+        }));
     }
 
 }

@@ -38,6 +38,11 @@ public class GameServerImplementation implements GameServerInterface {
         return player.getID();
     }
 
+    public void disconnect(String clientID) throws RemoteException {
+        Player player = getPlayer(clientID);
+        removePlayer(player);
+    }
+
     public String getList() throws RemoteException {
         String serverNames = "";
         for (String serverName : _muds.keySet()) {
@@ -106,11 +111,12 @@ public class GameServerImplementation implements GameServerInterface {
                     items += _item.getName() + " ";
                 }
                 return items;
-            case UNKNOWN:
-                System.out.println("Command is unknown");
-                break;
+            case QUIT:
+                removePlayer(player);
+                return "QUIT";
+            default:
+                return "Command is unknown";
         }
-        return "SUCCESS";
     }
 
 
@@ -125,5 +131,13 @@ public class GameServerImplementation implements GameServerInterface {
 
     private MUD getMUD(Player player) {
         return _muds.get(player.getServerName());
+    }
+
+    private void removePlayer(Player player) {
+        System.out.println("Player " + player.getName() + " disconnected from the server");
+        // Remove player from MUD
+        getMUD(player).delThing(player.getLocation(), player);
+        _players.remove(player);
+        
     }
 }
