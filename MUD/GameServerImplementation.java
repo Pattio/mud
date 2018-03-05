@@ -53,7 +53,7 @@ public class GameServerImplementation implements GameServerInterface {
     }
 
     public String getList() throws RemoteException {
-        return mudManager.getList();
+        return mudManager.getList() + "\nOnline players: " + _players.size() + "\n" + Terminal.getLine();
     }
 
     public boolean exists(String server) throws RemoteException {
@@ -72,7 +72,7 @@ public class GameServerImplementation implements GameServerInterface {
     public String getInformation(String clientID) throws RemoteException {
         Player player = getPlayer(clientID);
         return "Server name: " + player.getServerName() + "\n"
-            + "Players online: " + _players.size() + "\n"
+            + "Players online: " + mudManager.getMUD(player).playersCount() + "\n"
             + "To see all available commands type help \n"
             + Terminal.getLine() + "\n"
             + mudManager.getMUD(player).locationInfo(player.getLocation(), player);

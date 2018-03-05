@@ -95,10 +95,7 @@ public class GameClient {
             // Check if user wants to create new server
             if (input[0].equals("create")) {
                 // Try to create new server
-                if (!server.create(input[1])) {
-                    System.out.println("Could not create new server, max number of servers reached");
-                    return false;
-                }
+                if (!server.create(input[1])) return false;
                 // If main server return true, save server name
                 serverName = input[1];
                 return true;

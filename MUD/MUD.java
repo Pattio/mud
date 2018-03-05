@@ -283,4 +283,14 @@ public class MUD implements Serializable
         Vertex vertex = getVertex(location);
         return vertex.pickItem(itemName);
     }
+
+    public int playersCount() {
+        int count = 0;
+        for (Vertex vertex : vertexMap.values()) {
+            for (Entity entity : vertex._things) {
+                if (entity instanceof Player) count++;
+            }
+        }
+        return count;
+    }
 }
