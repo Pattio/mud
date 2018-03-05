@@ -110,6 +110,8 @@ public class GameServerImplementation implements GameServerInterface {
                 String items = "Here is your inventory list: \n";
                 for(Item _item : player.items) items += _item.getName() + " ";
                 return items;
+            case ONLINE:
+                return "Players online: " +  mudManager.getMUD(player).playersCount();
             case QUIT:
                 removePlayer(player);
                 return "QUIT";

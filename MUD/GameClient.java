@@ -56,7 +56,7 @@ public class GameClient {
             }
 
         } catch(Exception ex) {
-            ex.printStackTrace();
+            System.out.println("SERVER IS OFFLINE");
         }
     }
 
@@ -113,7 +113,7 @@ public class GameClient {
         Terminal.header("LOGIN");
         System.out.print("Enter username: ");
         String username = scan.nextLine();
-        System.out.print("\nEnter password: ");
+        System.out.print("Enter password: ");
         String password = scan.nextLine();
         try {
             uniquerPlayerID = server.connect(username, password, serverName);
