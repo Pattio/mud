@@ -127,9 +127,20 @@ public class GameClient {
         }
 
         if(uniquerPlayerID.equals("-1")) {
+            error = "Server doesn't exists";
+            return false;
+        }
+
+        if(uniquerPlayerID.equals("-2")) {
+            error = "Someone is already signed into account";
+            return false;
+        }
+
+        if(uniquerPlayerID.equals("-1")) {
             error = "Incorrect username/password try again";
             return false;
         }
+
         return true;
     }
 

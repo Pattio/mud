@@ -7,7 +7,6 @@ import java.util.*;
 import MUD.Entities.*;
 
 public class GameServerImplementation implements GameServerInterface {
-    // private HashMap<String, MUD> _muds = new HashMap<String, MUD>();
     private List<Player> _players = new Vector<Player>();
     private int _maxPlayers;
     private AccountManager accountManager= new AccountManager();
@@ -30,6 +29,7 @@ public class GameServerImplementation implements GameServerInterface {
         // Check if server exists
         MUD mud = mudManager.getMUD(server);
         if (mud == null) return "-1";
+        if (alreadyLoggedIn(username, server)) return "-2";
         // Check if account already exists
         Player player = accountManager.getAccount(username, server);
         if (player == null) {
@@ -44,7 +44,7 @@ public class GameServerImplementation implements GameServerInterface {
             return player.getID();
         }
         // Account exists, however password is incorrect
-        return "-1";
+        return "-3";
     }
 
     public void disconnect(String clientID) throws RemoteException {
@@ -146,6 +146,14 @@ public class GameServerImplementation implements GameServerInterface {
         for (Player player : _players) {
             mudManager.getMUD(player).delThing(player.getLocation(), player);
         }
+    }
+
+    // Check if someone is already logged into account
+    private boolean alreadyLoggedIn(String username, String server) {
+        for (Player player : _players) {
+            if (player.getName().equals(username) && player.getServerName().equals(server)) return true;
+        }
+        return false;
     }
 
     // Save accounts information on shutdown
