@@ -7,7 +7,7 @@ import java.io.*;
 public class AccountManager {
 
     private List<Player> accounts = new Vector<Player>();
-    private String accountsURL = "Accounts/accounts.mud";
+    private String accountsURL = "Storage/accounts";
     
     public AccountManager() {
         load();

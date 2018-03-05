@@ -5,24 +5,15 @@
 package MUD;
 
 import MUD.Entities.*;
-
-import java.io.FileReader;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.StringTokenizer;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.HashMap;
+import java.io.*;
+import java.util.*;
 
 /**
  * A class that can be used to represent a MUD; essenially, this is a
  * graph.
  */
 
-public class MUD
+public class MUD implements Serializable
 {
     /**
      * Private stuff

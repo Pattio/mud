@@ -4,8 +4,10 @@
 
 package MUD;
 
+import java.io.Serializable;
+
 // Represents an path in the MUD (an edge in a graph).
-class Edge
+class Edge implements Serializable
 {
     public Vertex _dest;   // Your destination if you walk down this path
     public String _view;   // What you see if you look down this path

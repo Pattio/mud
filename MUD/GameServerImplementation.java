@@ -7,22 +7,19 @@ import java.util.*;
 import MUD.Entities.*;
 
 public class GameServerImplementation implements GameServerInterface {
-    private HashMap<String, MUD> _muds = new HashMap<String, MUD>();
+    // private HashMap<String, MUD> _muds = new HashMap<String, MUD>();
     private List<Player> _players = new Vector<Player>();
-    private int _maxServers, _maxPlayers;
+    private int _maxPlayers;
     private AccountManager accountManager= new AccountManager();
+    private MUDManager mudManager;
 
     public GameServerImplementation(int maxServers, int maxPlayers) throws RemoteException {
         // Create new hook responsible for saving accounts before shutdown
         addShutdownHook();
         
         // Initialize limits
-        _maxServers = maxServers;
+        mudManager = new MUDManager(maxServers);
         _maxPlayers = maxPlayers;
-
-        // Create multiple muds
-        _muds.put("n", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
-        _muds.put("Beyond", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
 
         // Inform that server is launched
         Terminal.clear();
@@ -31,7 +28,7 @@ public class GameServerImplementation implements GameServerInterface {
 
     public String connect(String username, String password, String server) throws RemoteException {
         // Check if server exists
-        MUD mud = _muds.get(server);
+        MUD mud = mudManager.getMUD(server);
         if (mud == null) return "-1";
         // Check if account already exists
         Player player = accountManager.getAccount(username, server);
@@ -56,15 +53,11 @@ public class GameServerImplementation implements GameServerInterface {
     }
 
     public String getList() throws RemoteException {
-        String serverNames = "";
-        for (String serverName : _muds.keySet()) {
-            serverNames += serverName + "\n";
-        }
-        return serverNames;
+        return mudManager.getList();
     }
 
     public boolean exists(String server) throws RemoteException {
-        return (_muds.get(server) != null);
+        return (mudManager.getMUD(server) != null);
     }
 
     public boolean hasSpace(String server) throws RemoteException {
@@ -72,12 +65,8 @@ public class GameServerImplementation implements GameServerInterface {
     }
 
     public boolean create(String server) throws RemoteException {
-        // If there is max number of servers is reached return false
-        if (_muds.size() >= _maxServers) 
-            return false;
-        // Otherwise create new server
-        _muds.put(server, new MUD("Resources/edges", "Resources/messages", "Resources/things"));
-        return true;
+        // If max number of servers is reached return false
+        return mudManager.createMUD(server);
     }
 
     public String getInformation(String clientID) throws RemoteException {
@@ -86,7 +75,7 @@ public class GameServerImplementation implements GameServerInterface {
             + "Players online: " + _players.size() + "\n"
             + "To see all available commands type help \n"
             + Terminal.getLine() + "\n"
-            + getMUD(player).locationInfo(player.getLocation(), player);
+            + mudManager.getMUD(player).locationInfo(player.getLocation(), player);
     }
 
     public String parseInput(String clientID, String clientInput) throws RemoteException {
@@ -96,17 +85,17 @@ public class GameServerImplementation implements GameServerInterface {
             case HELP:
                 return Command.available();
             case SEE:
-                return getMUD(player).locationInfo(player.getLocation(), player);
+                return mudManager.getMUD(player).locationInfo(player.getLocation(), player);
             case MOVE:
-                String newLocation = getMUD(player).moveThing(player.getLocation(), Command.getMetadata(), player);
+                String newLocation = mudManager.getMUD(player).moveThing(player.getLocation(), Command.getMetadata(), player);
                 if (newLocation.equals(player.getLocation())) {
                     return "You tried to move to " + Command.getMetadata() + " however there is no path leading to there";
                 } else {
                     player.setLocation(newLocation);
-                    return getMUD(player).locationInfo(newLocation, player);
+                    return mudManager.getMUD(player).locationInfo(newLocation, player);
                 }
             case PICK:
-                Item item = getMUD(player).pick(player.getLocation(), Command.getMetadata());
+                Item item = mudManager.getMUD(player).pick(player.getLocation(), Command.getMetadata());
                 if(item != null) {
                     player.items.add(item);
                     return "You successfully picked " + Command.getMetadata() +  "!\n";
@@ -138,30 +127,34 @@ public class GameServerImplementation implements GameServerInterface {
         return null;
     }
 
-    private MUD getMUD(Player player) {
-        return _muds.get(player.getServerName());
-    }
-
     // Add player to MUD
     private void addPlayer(Player player, MUD mud) {
-        System.out.println("Player " + player.getName() + " connected to the server");
+        System.out.println("Player " + player.getName() + " connected to " + player.getServerName());
         _players.add(player);
         mud.addThing(player.getLocation(), player);
     }
 
     // Remove player from MUD
     private void removePlayer(Player player) {
-        System.out.println("Player " + player.getName() + " disconnected from the server");
-        getMUD(player).delThing(player.getLocation(), player);
+        System.out.println("Player " + player.getName() + " disconnected from " + player.getServerName());
+        mudManager.getMUD(player).delThing(player.getLocation(), player);
         _players.remove(player);
-        
+    }
+
+    // Removes all players in case of server shutdown
+    private void removePlayers() {
+        for (Player player : _players) {
+            mudManager.getMUD(player).delThing(player.getLocation(), player);
+        }
     }
 
     // Save accounts information on shutdown
     private void addShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
+                removePlayers();
                 accountManager.save();
+                mudManager.save();
             }
         }));
     }

@@ -50,7 +50,8 @@ public class GameClient {
                     // Otherwise print server response
                     System.out.println(client.serverResponse);
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    System.out.println("SERVER IS OFFLINE");
+                    break;
                 }
             }
 

@@ -5,15 +5,12 @@
 package MUD;
 
 import MUD.Entities.*;
+import java.io.Serializable;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Vector;
-import java.util.Iterator;
+import java.util.*;
 
 // Represents a location in the MUD (a vertex in the graph).
-class Vertex
+class Vertex implements Serializable
 {
     public String _name;             // Vertex name
     public String _msg = "";         // Message about this location
