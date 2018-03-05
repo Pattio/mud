@@ -10,14 +10,18 @@ public class GameServerImplementation implements GameServerInterface {
     private HashMap<String, MUD> _muds = new HashMap<String, MUD>();
     private List<Player> _players = new Vector<Player>();
     private int _maxServers, _maxPlayers;
+    private AccountManager accountManager= new AccountManager();
 
     public GameServerImplementation(int maxServers, int maxPlayers) throws RemoteException {
+        // Create new hook responsible for saving accounts before shutdown
+        addShutdownHook();
+        
         // Initialize limits
         _maxServers = maxServers;
         _maxPlayers = maxPlayers;
-        
+
         // Create multiple muds
-        _muds.put("Cobra", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
+        _muds.put("n", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
         _muds.put("Beyond", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
 
         // Inform that server is launched
@@ -25,17 +29,25 @@ public class GameServerImplementation implements GameServerInterface {
         Terminal.header("Game Server initialized");
     }
 
-    public String connect(String username, String server) throws RemoteException {
+    public String connect(String username, String password, String server) throws RemoteException {
         // Check if server exists
         MUD mud = _muds.get(server);
         if (mud == null) return "-1";
-        
-        System.out.println("Player " + username + " connected to the server");
-        String playerID = Integer.toString(_players.size());
-        Player player = new Player(playerID, username, server, mud.startLocation(), Collections.<Item>emptyList());
-        _players.add(player);
-        mud.addThing(player.getLocation(), player);
-        return player.getID();
+        // Check if account already exists
+        Player player = accountManager.getAccount(username, server);
+        if (player == null) {
+            // If account doesn't exist create it 
+            player = accountManager.createAccount(username, password, server, mud.startLocation());
+            addPlayer(player, mud);
+            return player.getID();
+        }
+        // If account exists check if password is correct
+        if (player.getPassword().equals(password)) {
+            addPlayer(player, mud);
+            return player.getID();
+        }
+        // Account exists, however password is incorrect
+        return "-1";
     }
 
     public void disconnect(String clientID) throws RemoteException {
@@ -79,7 +91,7 @@ public class GameServerImplementation implements GameServerInterface {
 
     public String parseInput(String clientID, String clientInput) throws RemoteException {
         Player player = getPlayer(clientID);
-        
+
         switch(Command.evaluate(clientInput)) {
             case HELP:
                 return Command.available();
@@ -107,9 +119,7 @@ public class GameServerImplementation implements GameServerInterface {
                 } 
 
                 String items = "Here is your inventory list: \n";
-                for(Item _item : player.items) {
-                    items += _item.getName() + " ";
-                }
+                for(Item _item : player.items) items += _item.getName() + " ";
                 return items;
             case QUIT:
                 removePlayer(player);
@@ -118,7 +128,6 @@ public class GameServerImplementation implements GameServerInterface {
                 return "Command is unknown";
         }
     }
-
 
     private Player getPlayer(String id) {
         for(Player player : _players) {
@@ -133,11 +142,27 @@ public class GameServerImplementation implements GameServerInterface {
         return _muds.get(player.getServerName());
     }
 
+    // Add player to MUD
+    private void addPlayer(Player player, MUD mud) {
+        System.out.println("Player " + player.getName() + " connected to the server");
+        _players.add(player);
+        mud.addThing(player.getLocation(), player);
+    }
+
+    // Remove player from MUD
     private void removePlayer(Player player) {
         System.out.println("Player " + player.getName() + " disconnected from the server");
-        // Remove player from MUD
         getMUD(player).delThing(player.getLocation(), player);
         _players.remove(player);
         
+    }
+
+    // Save accounts information on shutdown
+    private void addShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            public void run() {
+                accountManager.save();
+            }
+        }));
     }
 }

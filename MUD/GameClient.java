@@ -10,7 +10,7 @@ public class GameClient {
     private Scanner scan = new Scanner(System.in);
     private GameServerInterface server;
     private String uniquerPlayerID, serverName;
-    private String input, serverResponse;
+    private String input, serverResponse, error = "";
 
     public static void main(String[] args) {
         try {
@@ -111,19 +111,22 @@ public class GameClient {
 
     public boolean login() {
         Terminal.clear();
+        if (error.length() != 0) System.out.println(error);
         Terminal.header("LOGIN");
         System.out.print("Enter username: ");
         String username = scan.nextLine();
+        System.out.print("\nEnter password: ");
+        String password = scan.nextLine();
         try {
-            uniquerPlayerID = server.connect(username, serverName);
+            uniquerPlayerID = server.connect(username, password, serverName);
             Terminal.clear();
         } catch(Exception ex) {
-            System.out.println("SERVER ERROR, TRY AGAIN...");
+            error = "SERVER ERROR, TRY AGAIN...";
             return false;
         }
 
-        if(uniquerPlayerID == "-1") {
-            System.out.println("Incorrect username/password try again");
+        if(uniquerPlayerID.equals("-1")) {
+            error = "Incorrect username/password try again";
             return false;
         }
         return true;
@@ -147,5 +150,4 @@ public class GameClient {
             }
         }));
     }
-
 }

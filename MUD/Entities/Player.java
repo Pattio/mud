@@ -3,13 +3,14 @@ package MUD.Entities;
 import java.io.Serializable;
 import java.util.*;
 
-public class Player implements Entity {
+public class Player implements Entity, Serializable {
     // Public members 
     public List<Item> items = new Vector<Item>();
 
-    public Player(String uniqueID, String name, String server, String location, List<Item> items) {
+    public Player(String uniqueID, String name, String password, String server, String location, List<Item> items) {
         _uniqueID = uniqueID;
         _name = name;
+        _password = password;
         _currentServer = server;
         _location = location;
         items = items;
@@ -36,6 +37,10 @@ public class Player implements Entity {
         return _name;
     }
 
+    public String getPassword() {
+        return _password;
+    }
+
     public String getServerName() {
         return _currentServer;
     }
@@ -43,6 +48,7 @@ public class Player implements Entity {
     // Private members
     private String _uniqueID;
     private String _name;
+    private String _password;
     private String _location;
     private String _currentServer;
 }

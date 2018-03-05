@@ -1,6 +1,8 @@
 package MUD.Entities;
 
-public class Item implements Entity {
+import java.io.Serializable;
+
+public class Item implements Entity, Serializable {
     private String _name;
 
     public Item(String name) {
