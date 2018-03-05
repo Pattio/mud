@@ -133,7 +133,7 @@ public class GameClient {
             return false;
         }
 
-        if(uniquerPlayerID.equals("-1")) {
+        if(uniquerPlayerID.equals("-3")) {
             error = "Incorrect username/password try again";
             return false;
         }

@@ -5,25 +5,18 @@ import java.util.*;
 import java.io.*;
 
 public class AccountManager {
-
+    private PersistentManager persistentManager = new PersistentManager();
     private List<Player> accounts = new Vector<Player>();
     private String accountsURL = "Storage/accounts";
     
     public AccountManager() {
-        load();
+        // Load account from file
+        accounts = persistentManager.<List<Player>>load(accountsURL);
     }
 
     // Save all account to file
     public void save() {
-        try {
-            FileOutputStream outputFile = new FileOutputStream(accountsURL);
-            ObjectOutputStream outputStream = new ObjectOutputStream(outputFile);
-            outputStream.writeObject(accounts);
-            outputStream.close();
-            outputFile.close();
-        } catch (IOException i) {
-            i.printStackTrace();
-        }
+        persistentManager.<List<Player>>save(accountsURL, accounts);
     }
 
     // Check for user account in specific MUD server
@@ -53,18 +46,5 @@ public class AccountManager {
 
     private String generateUniqueID() {
         return Integer.toString(accounts.size());
-    }
-
-    // Load accounts from file, it is guaranteed that input stream will return
-    // list of Player objects, that's why warnings are suppressed
-    @SuppressWarnings("unchecked")
-    private void load() {
-        try {
-            FileInputStream inputFile = new FileInputStream(accountsURL);
-            ObjectInputStream inputStream = new ObjectInputStream(inputFile);
-            accounts = (List<Player>) inputStream.readObject();
-            inputStream.close();
-            inputFile.close();
-        } catch (Exception ex) { }
     }
 }

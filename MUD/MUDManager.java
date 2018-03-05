@@ -7,18 +7,18 @@ import java.io.*;
 public class MUDManager {
     private HashMap<String, MUD> muds = new HashMap<String, MUD>();
     private String mudsURL = "Storage/muds";
+    private PersistentManager persistentManager = new PersistentManager();
     private int _maxServers;
     
     public MUDManager(int maxServers) {
         _maxServers = maxServers;
-        if (new File("path/to/file.txt").isFile()) {
-            load();
-        } else {
-            // Create multiple muds
-            muds.put("n", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
-            muds.put("Beyond", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
+        // Create multiple muds
+        muds.put("n", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
+        muds.put("Beyond", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
+        // If server are already create load them instead
+        if (persistentManager.<HashMap<String, MUD>>load(mudsURL) != null) {
+            muds = persistentManager.<HashMap<String, MUD>>load(mudsURL);
         }
-        load();
     }
 
     // Return MUD matching name
@@ -53,27 +53,6 @@ public class MUDManager {
 
     // Save all muds to file
     public void save() {
-        try {
-            FileOutputStream outputFile = new FileOutputStream(mudsURL);
-            ObjectOutputStream outputStream = new ObjectOutputStream(outputFile);
-            outputStream.writeObject(muds);
-            outputStream.close();
-            outputFile.close();
-        } catch (IOException i) {
-            i.printStackTrace();
-        }
-    }
-
-    // Load muds from file, it is guaranteed that input stream will return
-    // hashmap of <String, MUD> objects, that's why warnings are suppressed
-    @SuppressWarnings("unchecked")
-    private void load() {
-        try {
-            FileInputStream inputFile = new FileInputStream(mudsURL);
-            ObjectInputStream inputStream = new ObjectInputStream(inputFile);
-            muds = (HashMap<String, MUD>) inputStream.readObject();
-            inputStream.close();
-            inputFile.close();
-        } catch (Exception ex) { }
+        persistentManager.<HashMap<String, MUD>>save(mudsURL, muds);
     }
 }
