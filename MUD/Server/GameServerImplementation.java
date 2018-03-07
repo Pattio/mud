@@ -57,7 +57,7 @@ public class GameServerImplementation implements GameServerInterface {
     }
 
     public String getList() throws RemoteException {
-        return mudManager.getList() + "\nOnline players: " + _players.size() + "\n" + Terminal.getLine();
+        return mudManager.getList() + "\nOnline players: " + _players.size() + "/" + _maxPlayers + "\n" + Terminal.getLine();
     }
 
     public boolean exists(String server) throws RemoteException {
