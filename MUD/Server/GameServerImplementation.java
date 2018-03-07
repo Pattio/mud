@@ -14,14 +14,13 @@ public class GameServerImplementation implements GameServerInterface {
     private int _maxPlayers;
     private AccountManager accountManager = new AccountManager();
     private EventManager eventManager = new EventManager();
-    private MUDManager mudManager;
+    private MUDManager mudManager = new MUDManager();
 
-    public GameServerImplementation(int maxServers, int maxPlayers) throws RemoteException {
+    public GameServerImplementation(int maxPlayers) throws RemoteException {
         // Create new hook responsible for saving accounts before shutdown
         addShutdownHook();
         
         // Initialize limits
-        mudManager = new MUDManager(maxServers);
         _maxPlayers = maxPlayers;
 
         // Inform that server is launched

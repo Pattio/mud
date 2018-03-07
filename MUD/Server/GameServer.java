@@ -28,7 +28,7 @@ public class GameServer {
             System.setProperty("java.security.policy", "mud.policy");
             System.setSecurityManager(new SecurityManager());
             // Generate remote objects
-            GameServerImplementation gameServer = new GameServerImplementation(3, 10);
+            GameServerImplementation gameServer = new GameServerImplementation(10);
             GameServerInterface gameServerStub = (GameServerInterface) UnicastRemoteObject.exportObject(gameServer, serverPort);
             // Rebind stub to registry
             registry.rebind("GameServer", gameServerStub);
