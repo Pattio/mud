@@ -94,7 +94,7 @@ public class GameServerImplementation implements GameServerInterface {
             case MOVE:
                 String newLocation = mudManager.getMUD(player).moveThing(player.getLocation(), Command.getMetadata(), player);
                 if (newLocation.equals(player.getLocation())) {
-                    return "You tried to move to " + Command.getMetadata() + " however there is no path leading to there";
+                    return "You tried to move to " + Command.getMetadata() + " however there is no path leading to there\n" + Terminal.getLine();
                 } else {
                     player.setLocation(newLocation);
                     // Inform other players staying on new location about the move
@@ -107,25 +107,26 @@ public class GameServerImplementation implements GameServerInterface {
                     player.items.add(item);
                     // Inform other players staying on new location about item beign picked
                     eventManager.addEvent(clientID, mudManager.getMUD(player).getNeighboursIDs(player), "Player " + player.getName() + " picked " + item.getName());
-                    return "You successfully picked " + Command.getMetadata() +  "!\n";
+                    return "You successfully picked " + Command.getMetadata() +  "!\n" + Terminal.getLine();
                 } else {
-                    return "Item with name: " + Command.getMetadata() + " doesn't exist";
+                    return "Item with name: " + Command.getMetadata() + " doesn't exist\n" + Terminal.getLine();
                 }
             case INVENTORY:
                 if (player.items.isEmpty()) {
-                    return "You don't have any items in your invetory";
+                    return "You don't have any items in your invetory\n" + Terminal.getLine();
                 } 
 
                 String items = "Here is your inventory list: \n";
                 for(Item _item : player.items) items += _item.getName() + " ";
+                items += "\n" + Terminal.getLine();
                 return items;
             case ONLINE:
-                return "Players online: " +  mudManager.getMUD(player).playersCount();
+                return "Players online: " +  mudManager.getMUD(player).playersCount() + "\n" + Terminal.getLine();
             case QUIT:
                 removePlayer(player);
                 return "QUIT";
             default:
-                return "Command is unknown";
+                return "Command is unknown\n" + Terminal.getLine();
         }
     }
 
