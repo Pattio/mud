@@ -3,6 +3,7 @@ package MUD.Client;
 import MUD.Common.*;
 import java.rmi.*;
 import java.util.Scanner;
+import java.util.List;
 
 public class GameClient {
 
@@ -26,7 +27,8 @@ public class GameClient {
             String serverURL = "rmi://" + hostname + ":" + port + "/GameServer";
             System.out.println("Retrieving server info from: " + serverURL);
             client.server = (GameServerInterface) Naming.lookup(serverURL);
-
+            // Start polling server for new events on different thread
+            client.startPolling();
             // Create new thread to handle exit
             client.addShutdownHook();
             // Wait for user to either select or create new a server
@@ -159,5 +161,25 @@ public class GameClient {
                 } catch(Exception ex) { }
             }
         }));
+    }
+
+    private void startPolling() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true) {
+                    try {
+                        List<String> events = server.pollEvents(uniquerPlayerID);
+                        if (events != null) {
+                            for(String event : events) {
+                                System.out.println(event);
+                            }
+                            Terminal.line();
+                        }
+                        Thread.sleep(1000);
+                    } catch(Exception ex) {}
+                }
+            }
+        }).start();
     }
 }

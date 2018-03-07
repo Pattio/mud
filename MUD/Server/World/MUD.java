@@ -293,4 +293,36 @@ public class MUD implements Serializable
         }
         return count;
     }
+
+    // Get all ids of the players who are on same mud
+    public List<String> getPlayerIDs() {
+        List<String> ids = new Vector<String>();
+        for (Vertex vertex : vertexMap.values()) {
+            for (Entity entity : vertex._things) {
+                if (entity instanceof Player) {
+                    Player player = (Player) entity;
+                    ids.add(player.getID());
+                }
+            }
+        }
+        return ids;
+    }
+
+    // Get all ids of the player who are at same vertex
+    public List<String> getNeighboursIDs(Player player) {
+        List<String> ids = new Vector<String>();
+        // Find vertex in which player is staying
+        Vertex vertex = getVertex(player.getLocation());
+        // Go through each entity in that vertex
+        for(Entity entity : vertex._things) {
+            // Consider only players
+            if(entity instanceof Player) {
+                Player neighbour = (Player) entity;
+                // Skip player who is calling the method
+                if (neighbour == player) continue;
+                ids.add(neighbour.getID());
+            }
+        }
+        return ids;
+    }
 }

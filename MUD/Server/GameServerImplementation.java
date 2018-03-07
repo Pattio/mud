@@ -12,7 +12,8 @@ import MUD.Server.PersistentStorage.*;
 public class GameServerImplementation implements GameServerInterface {
     private List<Player> _players = new Vector<Player>();
     private int _maxPlayers;
-    private AccountManager accountManager= new AccountManager();
+    private AccountManager accountManager = new AccountManager();
+    private EventManager eventManager = new EventManager();
     private MUDManager mudManager;
 
     public GameServerImplementation(int maxServers, int maxPlayers) throws RemoteException {
@@ -74,6 +75,7 @@ public class GameServerImplementation implements GameServerInterface {
 
     public String getInformation(String clientID) throws RemoteException {
         Player player = getPlayer(clientID);
+        eventManager.addEvent(clientID, mudManager.getMUD(player).getPlayerIDs(), "Player " + player.getName() + " connected to the server");
         return "Server name: " + player.getServerName() + "\n"
             + "Players online: " + mudManager.getMUD(player).playersCount() + "\n"
             + "To see all available commands type help \n"
@@ -95,12 +97,16 @@ public class GameServerImplementation implements GameServerInterface {
                     return "You tried to move to " + Command.getMetadata() + " however there is no path leading to there";
                 } else {
                     player.setLocation(newLocation);
+                    // Inform other players staying on new location about the move
+                    eventManager.addEvent(clientID, mudManager.getMUD(player).getNeighboursIDs(player), "Player " + player.getName() + " moved to your current location");
                     return mudManager.getMUD(player).locationInfo(newLocation, player);
                 }
             case PICK:
                 Item item = mudManager.getMUD(player).pick(player.getLocation(), Command.getMetadata());
                 if(item != null) {
                     player.items.add(item);
+                    // Inform other players staying on new location about item beign picked
+                    eventManager.addEvent(clientID, mudManager.getMUD(player).getNeighboursIDs(player), "Player " + player.getName() + " picked " + item.getName());
                     return "You successfully picked " + Command.getMetadata() +  "!\n";
                 } else {
                     return "Item with name: " + Command.getMetadata() + " doesn't exist";
@@ -121,6 +127,10 @@ public class GameServerImplementation implements GameServerInterface {
             default:
                 return "Command is unknown";
         }
+    }
+
+    public List<String> pollEvents(String clientID) throws RemoteException {
+        return eventManager.getEvents(clientID);
     }
 
     private Player getPlayer(String id) {
