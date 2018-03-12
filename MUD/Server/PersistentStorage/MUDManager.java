@@ -1,10 +1,17 @@
+/*************************************************************************
+* Distributed Systems and Security Assignment
+* ------------------------------------------------------------------------
+* Edvinas Byla | 51555015 | CS3524
+*************************************************************************/
+
 package MUD.Server.PersistentStorage;
 
-import MUD.Common.Terminal;
-import MUD.Server.World.*;
-import MUD.Server.Entities.*;
-import java.util.*;
 import java.io.*;
+import java.util.*;
+
+import MUD.Common.Terminal;
+import MUD.Server.Entities.*;
+import MUD.Server.World.*;
 
 public class MUDManager {
     private HashMap<String, MUD> muds = new HashMap<String, MUD>();

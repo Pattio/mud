@@ -1,11 +1,17 @@
-package MUD.Server;
+/*************************************************************************
+* Distributed Systems and Security Assignment
+* ------------------------------------------------------------------------
+* Edvinas Byla | 51555015 | CS3524
+*************************************************************************/
 
-import MUD.Common.GameServerInterface;
+package MUD.Server;
 
 import java.rmi.*;
 import java.rmi.registry.*;
 import java.rmi.server.UnicastRemoteObject;
 import java.net.InetAddress;
+
+import MUD.Common.GameServerInterface;
 
 public class GameServer {
     public static void main(String[] args) {

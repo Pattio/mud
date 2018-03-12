@@ -1,9 +1,15 @@
+/*************************************************************************
+* Distributed Systems and Security Assignment
+* ------------------------------------------------------------------------
+* Edvinas Byla | 51555015 | CS3524
+*************************************************************************/
+
 package MUD.Client;
 
-import MUD.Common.*;
 import java.rmi.*;
-import java.util.Scanner;
-import java.util.List;
+import java.util.*;
+
+import MUD.Common.*;
 
 public class GameClient {
 

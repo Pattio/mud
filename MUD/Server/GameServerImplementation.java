@@ -1,3 +1,9 @@
+/*************************************************************************
+* Distributed Systems and Security Assignment
+* ------------------------------------------------------------------------
+* Edvinas Byla | 51555015 | CS3524
+*************************************************************************/
+
 package MUD.Server;
 
 import java.rmi.*;
@@ -5,9 +11,9 @@ import java.rmi.server.*;
 import java.util.*;
 
 import MUD.Common.*;
-import MUD.Server.World.*;
 import MUD.Server.Entities.*;
 import MUD.Server.PersistentStorage.*;
+import MUD.Server.World.*;
 
 public class GameServerImplementation implements GameServerInterface {
     private List<Player> _players = new Vector<Player>();

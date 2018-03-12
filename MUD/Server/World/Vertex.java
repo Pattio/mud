@@ -4,10 +4,11 @@
 
 package MUD.Server.World;
 
-import MUD.Common.Terminal;
-import MUD.Server.Entities.*;
 import java.io.Serializable;
 import java.util.*;
+
+import MUD.Common.Terminal;
+import MUD.Server.Entities.*;
 
 // Represents a location in the MUD (a vertex in the graph).
 class Vertex implements Serializable

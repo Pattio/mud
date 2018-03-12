@@ -1,8 +1,15 @@
+/*************************************************************************
+* Distributed Systems and Security Assignment
+* ------------------------------------------------------------------------
+* Edvinas Byla | 51555015 | CS3524
+*************************************************************************/
+
 package MUD.Server.PersistentStorage;
 
-import MUD.Server.Entities.*;
-import java.util.*;
 import java.io.*;
+import java.util.*;
+
+import MUD.Server.Entities.*;
 
 public class AccountManager {
     private PersistentStorage persistentStorage = new PersistentStorage();

@@ -1,7 +1,13 @@
+/*************************************************************************
+* Distributed Systems and Security Assignment
+* ------------------------------------------------------------------------
+* Edvinas Byla | 51555015 | CS3524
+*************************************************************************/
+
 package MUD.Server.PersistentStorage;
 
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class PersistentStorage {
     // Load generic serialized type from file, call this only if know
