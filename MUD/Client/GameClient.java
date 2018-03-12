@@ -21,6 +21,7 @@ public class GameClient {
     private String input, serverResponse, error = "";
 
     public static void main(String[] args) {
+        // Check if enought arguments were passed
         if (args.length < 2) {
             System.err.println("Usage:\njava MUD.Client.GameClient <registry_port> <server_address>");
             return;
@@ -52,6 +53,7 @@ public class GameClient {
 
             // Start game loop
             while(true) {
+                // Get client input
                 client.input = client.scan.nextLine();
                 try {
                     // Get server response
@@ -75,6 +77,8 @@ public class GameClient {
         }
     }
 
+    // Welcome player and ask to either login to an existing server or 
+    // create new server
     private boolean welcome() {
         Terminal.clear();
         Terminal.header("WELCOME");
@@ -122,8 +126,10 @@ public class GameClient {
         return false;
     }
 
+    // Ask user to login to their account
     public boolean login() {
         Terminal.clear();
+        // Print error from previous login if it was unsuccessful
         if (error.length() != 0) System.out.println(error);
         Terminal.header("LOGIN");
         System.out.print("Enter username: ");
@@ -131,6 +137,7 @@ public class GameClient {
         System.out.print("Enter password: ");
         String password = scan.nextLine();
         try {
+            // Try to connect user, id must be positive number
             uniquerPlayerID = server.connect(username, password, serverName);
             Terminal.clear();
         } catch(Exception ex) {
@@ -138,6 +145,7 @@ public class GameClient {
             return false;
         }
 
+        // Display errors
         if(uniquerPlayerID.equals("-1")) {
             error = "Server doesn't exists";
             return false;
@@ -161,6 +169,7 @@ public class GameClient {
         return true;
     }
 
+    // Get server information
     private void showServerInformation() {
         Terminal.header("SERVER INFORMATION");
         try {
@@ -168,9 +177,11 @@ public class GameClient {
         } catch(Exception ex) {}
     }
 
+    // Create hook which will be run when player exits from terminal
     private void addShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
+                // If player has id, inform server about disconnection
                 if (uniquerPlayerID == "-1") return;
                 try {
                     server.disconnect(uniquerPlayerID);
@@ -180,12 +191,14 @@ public class GameClient {
         }));
     }
 
+    // Method to poll server for updates every second
     private void startPolling() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while(true) {
                     try {
+                        // If server returns any events print them out to user
                         List<String> events = server.pollEvents(uniquerPlayerID);
                         if (events != null) {
                             for(String event : events) {

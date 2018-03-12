@@ -8,6 +8,7 @@ package MUD.Server.Entities;
 
 import java.io.Serializable;
 
+// Class to hold item information
 public class Item implements Entity, Serializable {
     private String _name;
 

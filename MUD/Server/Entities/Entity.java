@@ -6,6 +6,7 @@
 
 package MUD.Server.Entities;
 
+// Inferface for all the Entities
 public interface Entity {
     public String getName();
 }

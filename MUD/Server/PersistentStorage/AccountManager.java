@@ -12,6 +12,7 @@ import java.util.*;
 import MUD.Server.Entities.*;
 
 public class AccountManager {
+    // Private members
     private PersistentStorage persistentStorage = new PersistentStorage();
     private List<Player> accounts = new Vector<Player>();
     private String accountsURL = "Storage/accounts";
@@ -38,12 +39,14 @@ public class AccountManager {
         return null;
     }
 
+    // Creates new account and inserts it into account manager storage
     public Player createAccount(String username, String password, String server, String location) {
         Player player = new Player(generateUniqueID(), username, password, server, location, Collections.<Item>emptyList());
         addAccount(player);
         return player;
     }
 
+    // Add account to account manager storage
     private void addAccount(Player player) {
         // Sanity check to prevent duplicates
         for(Player account : accounts) {
@@ -53,6 +56,7 @@ public class AccountManager {
         accounts.add(player);
     }
 
+    // Generates unique id for each account
     private String generateUniqueID() {
         return Integer.toString(accounts.size());
     }

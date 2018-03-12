@@ -20,9 +20,9 @@ public class MUDManager {
     
     public MUDManager() {
         // Create multiple muds
-        muds.put("n", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
+        muds.put("Cobra", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
         muds.put("Beyond", new MUD("Resources/edges", "Resources/messages", "Resources/things"));
-        // If server are already create load them instead
+        // If servers are already created, load them instead
         if (persistentStorage.<HashMap<String, MUD>>load(mudsURL) != null) {
             muds = persistentStorage.<HashMap<String, MUD>>load(mudsURL);
         }
@@ -38,6 +38,7 @@ public class MUDManager {
         return muds.get(player.getServerName());
     }
 
+    // Create new mud
     public boolean createMUD(String name) {
         // If server is already created, do not create it again
         if (muds.get(name) != null) 
@@ -47,6 +48,7 @@ public class MUDManager {
         return true;
     }
 
+    // Get list of all existing muds
     public String getList() {
         String serverNames = "";
         for (Map.Entry<String, MUD> entry  : muds.entrySet()) {

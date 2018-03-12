@@ -279,12 +279,13 @@ public class MUD implements Serializable
     }
 
 
-
+    // Pick item from vertex
     public Item pick(String location, String itemName) {
         Vertex vertex = getVertex(location);
         return vertex.pickItem(itemName);
     }
 
+    // Return players count in mud
     public int playersCount() {
         int count = 0;
         for (Vertex vertex : vertexMap.values()) {

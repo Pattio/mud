@@ -12,7 +12,7 @@ public enum Command {
     // Available commands
     UNKNOWN, MOVE, HELP, SEE, PICK, INVENTORY, ONLINE, QUIT;
 
-    // Function to transfer user input to command
+    // Function to transfer user input into command
     public static Command evaluate(String command) {
         String[] words = command.split("\\s");
 
@@ -27,10 +27,12 @@ public enum Command {
         return UNKNOWN;
     }
 
+    // Return metadata of the command
     public static String getMetadata() {
         return _metadata;
     }
 
+    // Returns all the available commands
     public static String available() {
         return Terminal.getHeader("COMMANDS") 
             + "\nhelp \n"

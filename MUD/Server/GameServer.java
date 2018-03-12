@@ -15,7 +15,7 @@ import MUD.Common.GameServerInterface;
 
 public class GameServer {
     public static void main(String[] args) {
-        
+        // Check if enought arguments were passed
         if (args.length < 2) {
             System.err.println("Usage:\njava MUD.Server.GameServer <registry_port> <server_port>");
             return;

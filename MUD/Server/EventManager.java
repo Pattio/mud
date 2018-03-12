@@ -27,6 +27,7 @@ public class EventManager {
         }
     }
 
+    // Get and remove all the events for specific player
     public List<String> getEvents(String playerID) {
         return events.remove(playerID);
     }

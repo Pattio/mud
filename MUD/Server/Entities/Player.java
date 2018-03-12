@@ -9,6 +9,7 @@ package MUD.Server.Entities;
 import java.io.Serializable;
 import java.util.*;
 
+// Class to represent Player
 public class Player implements Entity, Serializable {
     // Public members 
     public List<Item> items = new Vector<Item>();
