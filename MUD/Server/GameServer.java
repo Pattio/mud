@@ -10,9 +10,14 @@ import java.net.InetAddress;
 public class GameServer {
     public static void main(String[] args) {
         
-        // Parse arguments
-        int registryPort =  50000;
-        int serverPort =    50001;
+        if (args.length < 2) {
+            System.err.println("Usage:\njava MUD.Server.GameServer <registry_port> <server_port>");
+            return;
+        }
+
+         // Parse arguments
+        int registryPort =  Integer.parseInt(args[0]);
+        int serverPort =    Integer.parseInt(args[1]);
         
         // Try to create registry in case it is not created yet.
         try {

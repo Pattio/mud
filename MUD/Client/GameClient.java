@@ -15,10 +15,16 @@ public class GameClient {
     private String input, serverResponse, error = "";
 
     public static void main(String[] args) {
+        if (args.length < 2) {
+            System.err.println("Usage:\njava MUD.Client.GameClient <registry_port> <server_address>");
+            return;
+        }
+
+        // Gather RMI registry and Server address information
+        int port = Integer.parseInt(args[0]);
+        String hostname = args[1];
+
         try {
-            // Gather server address information
-            String hostname = "macbook";
-            int port = 50000;
             // Set security policy
             System.setProperty("java.security.policy", "mud.policy");
             System.setSecurityManager(new SecurityManager());

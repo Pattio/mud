@@ -1,0 +1,8 @@
+# RMI Registry Registry Port
+RMI_REGISTRY_PORT="50000"
+
+# Server Port
+SERVER_PORT="50001"
+
+# Server Address
+SERVER_ADDRESS="macbook"
