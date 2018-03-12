@@ -74,7 +74,6 @@ public class GameServerImplementation implements GameServerInterface {
 
     public String getInformation(String clientID) throws RemoteException {
         Player player = getPlayer(clientID);
-        eventManager.addEvent(clientID, mudManager.getMUD(player).getPlayerIDs(), "Player " + player.getName() + " connected to the server");
         return "Server name: " + player.getServerName() + "\n"
             + "Players online: " + mudManager.getMUD(player).playersCount() + "\n"
             + "To see all available commands type help \n"
@@ -144,14 +143,18 @@ public class GameServerImplementation implements GameServerInterface {
 
     // Add player to MUD
     private void addPlayer(Player player, MUD mud) {
-        System.out.println("Player " + player.getName() + " connected to " + player.getServerName());
+        String message = "Player " + player.getName() + " connected to ";
+        System.out.println(message + player.getServerName());
+        eventManager.addEvent(player.getID(), mudManager.getMUD(player).getPlayerIDs(), message + "the server");
         _players.add(player);
         mud.addThing(player.getLocation(), player);
     }
 
     // Remove player from MUD
     private void removePlayer(Player player) {
-        System.out.println("Player " + player.getName() + " disconnected from " + player.getServerName());
+        String message = "Player " + player.getName() + " disconnected from ";
+        System.out.println(message + player.getServerName());
+        eventManager.addEvent(player.getID(), mudManager.getMUD(player).getPlayerIDs(), message + "the server");
         mudManager.getMUD(player).delThing(player.getLocation(), player);
         _players.remove(player);
     }

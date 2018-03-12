@@ -16,11 +16,6 @@ public class Player implements Entity, Serializable {
         items = items;
     }
 
-    public void greet() {
-        System.out.println("Hello, " + _name);
-        System.out.println("Your current location is " + _location);
-    }
-
     public String getID() {
         return _uniqueID;
     }
