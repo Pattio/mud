@@ -144,11 +144,16 @@ public class GameClient {
         }
 
         if(uniquerPlayerID.equals("-2")) {
-            error = "Someone is already signed into account";
+            error = "Name and password cannot be empty";
             return false;
         }
 
         if(uniquerPlayerID.equals("-3")) {
+            error = "Someone is already signed into account";
+            return false;
+        }
+
+        if(uniquerPlayerID.equals("-4")) {
             error = "Incorrect username/password try again";
             return false;
         }

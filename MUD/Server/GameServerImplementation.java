@@ -38,7 +38,10 @@ public class GameServerImplementation implements GameServerInterface {
         // Check if server exists
         MUD mud = mudManager.getMUD(server);
         if (mud == null) return "-1";
-        if (alreadyLoggedIn(username, server)) return "-2";
+        // Check if username && password is not empty 
+        if(username.trim().isEmpty() || password.trim().isEmpty()) return "-2";
+        // Check if no one is already logged in into account
+        if (alreadyLoggedIn(username, server)) return "-3";
         // Check if account already exists
         Player player = accountManager.getAccount(username, server);
         if (player == null) {
@@ -53,7 +56,7 @@ public class GameServerImplementation implements GameServerInterface {
             return player.getID();
         }
         // Account exists, however password is incorrect
-        return "-3";
+        return "-4";
     }
 
     public void disconnect(String clientID) throws RemoteException {
